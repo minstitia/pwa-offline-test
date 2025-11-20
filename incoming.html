@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>약 복용 알림 수신중...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        background: radial-gradient(circle at top, #3f51b5, #000000);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .call-screen {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+        padding: 24px;
+      }
+
+      .caller-avatar {
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        margin-bottom: 8px;
+      }
+
+      .caller-name {
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .call-subtitle {
+        font-size: 14px;
+        opacity: 0.9;
+      }
+
+      .alarm-info {
+        font-size: 13px;
+        opacity: 0.8;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 32px;
+        margin-top: 24px;
+      }
+
+      .btn {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .btn.decline {
+        background: #e53935;
+      }
+
+      .btn.accept {
+        background: #43a047;
+      }
+
+      .btn-label {
+        font-size: 12px;
+        margin-top: 8px;
+        opacity: 0.9;
+      }
+
+      .btn-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .small-link {
+        font-size: 12px;
+        margin-top: 24px;
+        opacity: 0.7;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="call-screen">
+      <div class="caller-avatar">💊</div>
+      <div class="caller-name">약 복용 알림</div>
+      <div class="call-subtitle">“저녁 약 드실 시간이 되었어요.”</div>
+      <div class="alarm-info" id="alarm-info"></div>
+
+      <div class="buttons">
+        <div class="btn-wrap">
+          <button class="btn decline" id="btn-decline">✕</button>
+          <div class="btn-label">나중에</div>
+        </div>
+        <div class="btn-wrap">
+          <button class="btn accept" id="btn-accept">✓</button>
+          <div class="btn-label">복용 완료</div>
+        </div>
+      </div>
+
+      <div class="small-link" id="back-home">홈으로 돌아가기</div>
+    </div>
+
+    <script>
+      // URL에 alarmId 같은 값이 있으면 표시 (예: incoming.html?alarmId=test123)
+      const params = new URLSearchParams(location.search);
+      const alarmId = params.get("alarmId");
+      const alarmInfoEl = document.getElementById("alarm-info");
+      if (alarmId) {
+        alarmInfoEl.textContent = "알림 ID: " + alarmId;
+      }
+
+      // 진동 패턴 (안드로이드 크롬 일부에서 동작)
+      if (navigator.vibrate) {
+        // 간단한 패턴: 600ms 진동 - 300ms 대기 - 600ms 진동
+        navigator.vibrate([600, 300, 600]);
+      }
+
+      document
+        .getElementById("btn-accept")
+        .addEventListener("click", () => {
+          // TODO: 여기서 실제 복용 완료 처리를 서버/로컬스토리지에 연동
+          alert("복용 완료로 처리되었습니다." + (alarmId ? " (ID: " + alarmId + ")" : ""));
+          window.location.href = "./index.html";
+        });
+
+      document
+        .getElementById("btn-decline")
+        .addEventListener("click", () => {
+          // TODO: ‘나중에 알림’ 재예약 로직을 추후에 붙일 수 있음
+          alert("나중에 다시 알림을 보낼 수 있습니다.");
+          window.location.href = "./index.html";
+        });
+
+      document.getElementById("back-home").addEventListener("click", () => {
+        window.location.href = "./index.html";
+      });
+    </script>
+  </body>
+</html>
