@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>PWA 오프라인 테스트</title>
+
+    <!-- 뷰포트: 모바일 웹앱 필수 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- PWA 기본 세팅 -->
+    <link rel="manifest" href="manifest.webmanifest" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- iOS용 웹앱 설정 -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="PWA Test" />
+</head>
+
+<body>
+    <h1>PWA 오프라인 테스트</h1>
+    <p id="status">네트워크 상태 체크 중...</p>
+    <p>
+        이 화면을 본 뒤, 홈 화면에 추가한 후<br />
+        비행기 모드(오프라인)로 바꾸고 다시 실행해보세요.
+    </p>
+
+    <script>
+        // 네트워크 상태 표시
+        function updateStatus() {
+            const el = document.getElementById("status");
+            if (navigator.onLine) {
+                el.textContent = "✅ 온라인 상태입니다.";
+            } else {
+                el.textContent = "📴 오프라인 상태입니다. (그래도 이 화면은 뜨죠!)";
+            }
+        }
+
+        window.addEventListener("online", updateStatus);
+        window.addEventListener("offline", updateStatus);
+        updateStatus();
+
+        // 서비스 워커 등록
+        if ("serviceWorker" in navigator) {
+            window.addEventListener("load", function () {
+                navigator.serviceWorker
+                    .register("./service-worker.js")
+                    .then(function (reg) {
+                        console.log("Service Worker 등록 성공:", reg.scope);
+                    })
+                    .catch(function (err) {
+                        console.log("Service Worker 등록 실패:", err);
+                    });
+            });
+        }
+    </script>
+</body>
+
+</html>
